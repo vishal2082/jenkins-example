@@ -2,31 +2,20 @@ pipeline {
     agent any
 
     stages {
-        stage ('Compile Stage') {
-
+        stage('Build') {
             steps {
-                withMaven(maven : 'maven_3_3_9') {
-                    sh 'mvn clean compile'
-                }
+                // Get some code from a GitHub repository
+                git 'https://github.com/vishal2082/sample_maven.git'
+
+                // Run Maven on a Unix agent.
+                sh "mvn -Dmaven.test.failure.ignore=true clean package"
+
+                // To run Maven on a Windows agent, use
+                // bat "mvn -Dmaven.test.failure.ignore=true clean package"
             }
-        }
 
-        stage ('Testing Stage') {
-
-            steps {
-                withMaven(maven : 'maven_3_3_9') {
-                    sh 'mvn test'
-                }
-            }
-        }
-
-
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven_3_3_9') {
-                    sh 'mvn deploy'
-                }
             }
         }
     }
 }
+===
